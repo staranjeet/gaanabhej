@@ -1,0 +1,26 @@
+{
+  "name": "gaanabhej",
+  "version": "0.0.0",
+  "homepage": "https://github.com/staranjeet/gaanabhej",
+  "authors": [
+    "Taranjeet <reachtotj@gmail.com>"
+  ],
+  "description": "An app to suggest songs",
+  "keywords": [
+    "songs",
+    "playlist",
+    "share"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "gaanabhej/static/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5"
+  }
+}

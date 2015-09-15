@@ -30,6 +30,13 @@
 
 		</div>
 
+
+		<div class="row">
+			{% for i in suggestions %}
+				
+					<a href="{{j.url}}">{{i.song.name}}</a>
+			{% endfor %}
+
 		</div>
 
 	</body>

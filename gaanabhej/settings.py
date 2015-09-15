@@ -87,6 +87,8 @@ WSGI_APPLICATION = 'gaanabhej.wsgi.application'
 #     }
 # }
 
+LOGIN_REDIRECT_URL = '/'
+
 
 DATABASES = {
     'default': {

@@ -1,0 +1,97 @@
+{% load staticfiles %}
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>
+			{% block title %} Gaanabhej {% endblock %}
+		</title>
+		<link href="{% static "bower_components/bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
+		{% block custom_css %}
+		{% endblock %}
+	</head>
+
+	<body>
+
+
+        <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+        {% if user.is_authenticated %}
+          {{user.username}}
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right" >
+        <!-- <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li> -->
+        
+        {% if user.is_authenticated  %}
+          <li><a href="/suggest">Suggest</a></li>
+        <li><a href="/songs">Suggestions</a></li>
+        <li><a href="/myplaylist">My Playlist</a></li>
+            <li>
+              <a href="{% url 'django.contrib.auth.views.logout' %}?next=/suggest">Logout</a>
+            </li>
+        {% else %}
+
+          <form id="searchForm" class="navbar-form navbar-right" role="form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+              {% csrf_token %}
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" class="form-control" id="id_username" maxlength="254" name="username" placeholder="username">            
+              </div>
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input type="password" class="form-control" id="id_password" placeholder="Password" name="password">                
+              </div>
+              <input type="submit" class="btn btn-primary" value="Log In">
+              <input type="hidden" name="next" value="{{ next }}" />
+
+            </form>
+
+        {% endif %}
+
+      </ul>
+      
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+		<div class="container-fluid">
+
+		{% block container %}
+		{% endblock %}
+		</div>
+		
+
+		
+
+
+	 <script src="{% static "bower_components/jquery/dist/jquery.min.js" %}"></script>
+
+    <script src="{% static "bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+
+    {% block custom_javascript %}
+    {% endblock %}
+
+   
+	</body>
+
+
+</html>

@@ -30,6 +30,7 @@ class SuggestedSongs(models.Model):
 	suggestedBy	= models.ForeignKey(User,db_column='suggested_by',related_name='suggested_by_user')
 	song 		= models.ForeignKey(SongDetails)
 	isSeen		= models.BooleanField(default=False,db_column='is_seen')
+	score 		= models.IntegerField(default=0,db_column='score')
 
 	class Meta:
 		verbose_name_plural = 'Songs Suggested'
@@ -37,7 +38,7 @@ class SuggestedSongs(models.Model):
 		db_table			= 'suggested_songs'
 
 	def __str__(self):
-		return self.id
+		return str(self.id)
 
 	def __unicode__(self):
-		return self.id
+		return str(self.id)

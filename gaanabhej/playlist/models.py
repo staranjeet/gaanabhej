@@ -8,9 +8,9 @@ class SongDetails(models.Model):
 	name		= models.CharField(max_length=255)
 	artist		= models.CharField(max_length=255)
 	duration	= models.CharField(max_length=255)
-	likes		= models.CharField(max_length=50)
-	views		= models.CharField(max_length=50)
-	dislikes	= models.CharField(max_length=50)
+	likes		= models.CharField(max_length=50,verbose_name='Likes')
+	views		= models.CharField(max_length=50,verbose_name='Views')
+	dislikes	= models.CharField(max_length=50,verbose_name='DisLikes')
 
 	class Meta:
 		verbose_name_plural = 'Song Details'
@@ -18,10 +18,10 @@ class SongDetails(models.Model):
 		db_table 			= 'song_details'
 
 	def __str__(self):
-		return self.url
+		return self.name
 
 	def __unicode__(self):
-		return self.url
+		return self.name
 
 class SuggestedSongs(models.Model):
 
@@ -29,7 +29,7 @@ class SuggestedSongs(models.Model):
 	suggestedTo	= models.ForeignKey(User,db_column='suggested_to',related_name='suggested_to_user')
 	suggestedBy	= models.ForeignKey(User,db_column='suggested_by',related_name='suggested_by_user')
 	song 		= models.ForeignKey(SongDetails)
-	isSeen		= models.BooleanField(default=False,db_column='is_seen')
+	isSeen		= models.BooleanField(default=False,db_column='is_seen',verbose_name='Listened by user?')
 	score 		= models.IntegerField(default=0,db_column='score')
 
 	class Meta:

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+    {% block container %}
+
+            
+
+            <div class="row" id="alertMsgDiv" style="display:none;">
+
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+
+            <div class="alert alert-dismissible" role="alert">
+
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" id="alertMsgBtn"><span aria-hidden="true">&times;</span></button>
+                
+            </div>
+            </div>
+
+            </div>
+
+        
+
+
+
+		<div class="row">
+
+			<form class="form-horizontal" id="suggestForm">
+
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+    			     {{form.songName}}
+                </div>
+            </div>
+
+            {% csrf_token %}
+
+            <div class="form-group">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+			{{form.suggestedTo}}
+            </div>
+            </div>
+
+            <div class="form-group">
+            <div class="col-xs-6 col-sm-4 col-sm-offset-2">
+			<button type="button" class="btn btn-primary btn-block" id="suggestSongBtn">Suggest</button>	
+            </div>
+            <div class="col-xs-6 col-sm-4">
+            <a type="submit"  id="reset" href="/suggest" class="btn btn-warning btn-block">Reset</a>
+
+            </div>
+            </div>  
+			</form>
+
+		</div>
+
+
+		
+        {% endblock %}
+
+
+{% block custom_javascript %}
+
+    <script type="text/javascript">
+
+    {% include "ajaxPost.html" %}
+
+    $('#suggestSongBtn').unbind('click').click(function(e){
+
+        $.post('/suggest',$('#suggestForm').serialize(),function(data){
+                    data = JSON.parse(data);
+                    console.log(data);
+                    $("#alertMsgDiv").show();
+                    $("#alertMsgBtn").after(data.alertMsg);
+                    $(".alert").addClass(data.alrtBstrpCls);
+
+            });
+
+        // $.ajax({
+        //     url : "/suggest",
+        //     type: "POST",
+        //     data : $('#suggestForm').serialize(),
+        //     success : function(data){
+        //             data = JSON.parse(data);
+        //             console.log(data);
+        //             $("alertMsgDiv").show();
+        //             $(".alert").addClass(data.alrtBstrpCls);
+        //             $("#alertMsgDiv").after(data.alertMsg);
+
+        //     },
+        //     error: function(xhr,errmsg,err){
+        //             console.log("Some error in hitting ajax request");
+        //     }
+        // });
+
+
+    });//button click ends here
+
+    
+
+    </script>
+
+{% endblock %}
+
+
+
+	
+
+	

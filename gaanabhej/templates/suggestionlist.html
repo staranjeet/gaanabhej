@@ -2,12 +2,14 @@
 {% load staticfiles %}
 
     {% block container %}
-		<div class="row">
-			{% for i in suggestions %}
-				
-					<div id="suggestion_{{i.id}}">
-					<a href="{{i.song.url}}" helper_id={{i.id}} class='suggestedSong'>{{i.song.name}}</a><br/>
-			<!-- Standard button -->
+		
+    <div id="suggestions">
+    <div class="row">
+      {% for i in suggestions %}
+        
+          <div id="suggestion_{{i.id}}">
+          <a href="{{i.song.url}}" helper_id={{i.id}} class='suggestedSong'>{{i.song.name}}</a><br/>
+      <!-- Standard button -->
 <button type="button" class="btn btn-default" helper_id={{i.id}} id="cantsay">listening first time thats why cant say anything</button>
 
 <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
@@ -26,27 +28,36 @@
 <button type="button" class="btn btn-danger" helper_id={{i.id}} id="what">what did i just see huh :@</button>
 <br/>
 </div>
-			{% endfor %}
+      {% endfor %}
 
-		</div>
+    </div>
 
+    </div>
 		
         {% endblock %}
 
 {% block custom_javascript %}
 <script type="text/javascript">
 
-    	$('.btn').click(function(){
-    		var id = this.id;
-    		// console.log(id);
-    		var suggestionId = $(this).attr('helper_id');
-    		// console.log(h);
+{% include "ajaxPost.html" %}    	
 
-    		$.post('songs',{'suggestionId':suggestionId,'scoreString':id},
-    			function(data){
-    				console.log(data);
-    			})
 
+
+$('.btn').click(function(){
+        var id = this.id;
+        // console.log(id);
+        var suggestionId = $(this).attr('helper_id');
+        // console.log(h);
+
+        $.post('songs',{'suggestionId':suggestionId,'scoreString':id},
+          function(data){
+           // console.log(data);
+
+           $('#suggestions').empty();
+           $('#suggestions').html(data);
+
+
+          });
 
     		// $.ajax({
       //           url : "songs/"+suggestionId+"/"+id,

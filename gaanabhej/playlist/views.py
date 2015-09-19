@@ -25,72 +25,13 @@ class SuggestASong(ListView):
 	def get(self,request,*args,**kwargs):
 
 		formObj			= PlayListForm(request.GET,user=request.user)
-		# suggestionToBeViewed = None
-		# parseError = False
-		# alertMsg, alrtBstrpCls = [None]*2
 		
-		# suggestedBy = request.user
-
-		# if formObj.is_valid():
-
-		# 	formCleaned 		= formObj.cleaned_data
-		# 	songURL				= formCleaned.get("songName",None)
-		# 	suggestedToId 		= formCleaned.get("suggestedTo",None)
-		# 	suggestedTo 		= User.objects.get(id=suggestedToId)
-		# 	# print suggestedBy,suggestedTo
-
-		# 	if songURL is not None:
-		# 		print songURL
-		# 		try:
-		# 			page			= requests.get(songURL).text
-		# 			x	 			= etree.HTML(page)
-		# 			title			= x.xpath('//title/text()')[0]
-		# 			views			= convertToInt(x.xpath('//div[@class="watch-view-count"]/text()')[0])
-		# 			likes			= convertToInt(x.xpath('//button[@title="Unlike"]/span[@class="yt-uix-button-content"]/text()')[0])
-		# 			dislikes		= convertToInt(x.xpath('//button[@title="I dislike this"]/span[@class="yt-uix-button-content"]/text()')[0])
-		# 		except Exception,e:
-		# 			print 'Error : Parsing song info ',e
-		# 			title,views,likes,dislikes = [None]*4
-		# 			parseError = True
-		# 		# duration 		= x.xpath('//span[@class="video-time"]/text()')
-		# 		# print title,views,likes,dislikes
-		# 		if not parseError:
-		# 			newsong = SongDetails(
-		# 				url=songURL,name=title,views=views,
-		# 				dislikes=dislikes,likes=likes
-		# 				)
-		# 			newsong.save()
-		# 			suggestion = SuggestedSongs(suggestedTo=suggestedTo,
-		# 				suggestedBy=suggestedBy,song=newsong,isSeen=False)
-		# 			suggestion.save()
-
-		# 			alertMsg 	= mark_safe('''Your song is successfully suggested to %s. 
-		# 						By the ways it was a %s song''' % (
-		# 							suggestedTo.username,
-		# 							'<i class="glyphicon glyphicon-heart"></i>'
-		# 							))
-		# 			alrtBstrpCls = 'info'
-
-
-
-		# 		else:
-		# 			alertMsg	 = '''We are facing some error in retriving  
-		# 							media info. Can you please try again later'''
-		# 			alrtBstrpCls  = 'danger'
-
-		# suggestionToBeViewed = SuggestedSongs.objects.filter(suggestedTo=suggestedBy.id,isSeen=False)
-		# print suggestionToBeViewed
 		return render(request,self.template_name,{
 			'form'			: formObj,
-			# 'alrtBstrpCls'	: alrtBstrpCls,
-			# 'alertMsg'		: alertMsg
-
 			})
 
 	def post(self,request,*args,**kwargs):
 
-		# formObj					= PlayListForm(request.GET,user=request.user)
-		suggestionToBeViewed 	= None
 		parseError 				= False
 		alertMsg, alrtBstrpCls 	= [None]*2
 		d 						= {}
@@ -115,8 +56,6 @@ class SuggestASong(ListView):
 					print 'Error : Parsing song info ',e
 					title,views,likes,dislikes = [None]*4
 					parseError = True
-				# duration 		= x.xpath('//span[@class="video-time"]/text()')
-				# print title,views,likes,dislikes
 				if not parseError:
 					newsong = SongDetails(
 						url=songURL,name=title,views=views,
@@ -138,12 +77,6 @@ class SuggestASong(ListView):
 									media info. Can you please try again later'''
 					alrtBstrpCls  = 'alert-danger'
 
-		# return render(request,self.template_name,{
-		# 	'form'			: formObj,
-		# 	'alrtBstrpCls'	: alrtBstrpCls,
-		# 	'alertMsg'		: alertMsg
-
-		# 	})
 		d = {
 			'alrtBstrpCls'	: alrtBstrpCls,
 			'alertMsg'		: alertMsg

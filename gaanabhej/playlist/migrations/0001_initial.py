@@ -19,9 +19,9 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('artist', models.CharField(max_length=255)),
                 ('duration', models.CharField(max_length=255)),
-                ('likes', models.CharField(max_length=50)),
-                ('views', models.CharField(max_length=50)),
-                ('dislikes', models.CharField(max_length=50)),
+                ('likes', models.CharField(max_length=50, verbose_name=b'Likes')),
+                ('views', models.CharField(max_length=50, verbose_name=b'Views')),
+                ('dislikes', models.CharField(max_length=50, verbose_name=b'DisLikes')),
             ],
             options={
                 'db_table': 'song_details',
@@ -33,7 +33,8 @@ class Migration(migrations.Migration):
             name='SuggestedSongs',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
-                ('isSeen', models.BooleanField(default=False, db_column=b'is_seen')),
+                ('isSeen', models.BooleanField(default=False, verbose_name=b'Listened by user?', db_column=b'is_seen')),
+                ('score', models.IntegerField(default=0, db_column=b'score')),
                 ('song', models.ForeignKey(to='playlist.SongDetails')),
                 ('suggestedBy', models.ForeignKey(related_name='suggested_by_user', db_column=b'suggested_by', to=settings.AUTH_USER_MODEL)),
                 ('suggestedTo', models.ForeignKey(related_name='suggested_to_user', db_column=b'suggested_to', to=settings.AUTH_USER_MODEL)),

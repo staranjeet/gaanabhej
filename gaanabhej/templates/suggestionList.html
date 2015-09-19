@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block container %}
+	
+	<div id="suggestions" class="container">
+		{% for i in suggestions %}
+
+			<div class="row" id="suggestion_{{i.id}}" style="padding-top:20px;">
+				<div class="col-sm-4">
+					{{i.song.name}} 
+					<a href="{{eachSong.song.url}}" target="_blank">
+						<i class="glyphicon glyphicon-facetime-video"></i>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					&lt;<span class="text-info" data-toggle="tooltip" title="Total Views" data-placement="left">
+					{{i.song.views}},
+					</span>
+					<span class="text-success" data-toggle="tooltip" title="Likes" data-placement="top">
+					{{i.song.likes}},
+					</span>
+					<span class="text-danger" data-toggle="tooltip" title="Dislikes" data-placement="right">{{i.song.dislikes}}
+					</span>&gt;
+				</div>
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-success" helper_id={{i.id}} id="superawesome" data-toggle="tooltip" data-placement="left" title="SuperAwesome">50</button>
+					<button type="button" class="btn btn-primary" helper_id={{i.id}} id="abitlike" data-toggle="tooltip" data-placement="top" title="I Like it somewhat">25</button>
+					<button type="button" class="btn btn-info" helper_id={{i.id}} id="ok" data-toggle="tooltip" data-placement="bottom" title="It is Okay!">15</button>
+					<button type="button" class="btn btn-default" helper_id={{i.id}} id="cantsay" data-toggle="tooltip" data-placement="top" title="Listening for the first time that's why can't say anything">5</button>
+					<button type="button" class="btn btn-warning" helper_id={{i.id}} id="bad" data-toggle="tooltip" data-placement="bottom" title="Wasn't expecting this from you">-10</button>
+					<button type="button" class="btn btn-danger" helper_id={{i.id}} id="what" data-toggle="tooltip" data-placement="top" title="What did I just see! :@">-50</button>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+
+{% endblock %}
+
+{% block custom_javascript %}
+	<script src="{% static "bower_components/bootstrap/js/tooltip.js" %}"></script>
+	<script type="text/javascript">
+		{% include "ajaxPost.html" %}    
+
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+		});  
+
+		$('.btn').click(function(){
+			var id = this.id;
+			var suggestionId = $(this).attr('helper_id');
+
+			$.post('songs',{'suggestionId':suggestionId,'scoreString':id},
+			function(data){
+				// console.log(data);
+				$('#suggestions').empty();
+				$('#suggestions').html(data);
+			});
+		});
+
+	</script>
+
+{% endblock %}
+
+
+
+	
+
+	

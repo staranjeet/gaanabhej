@@ -4,7 +4,9 @@ from django.contrib.auth.models	import User
 # Create your models here.
 class SongDetails(models.Model):
 
-	url 		= models.URLField(primary_key=True,max_length=1024)
+
+	# songId 		= models.AutoField(primary_key=True)
+	url 		= models.URLField(max_length=1024,primary_key=True)
 	name		= models.CharField(max_length=255)
 	artist		= models.CharField(max_length=255)
 	duration	= models.CharField(max_length=255)

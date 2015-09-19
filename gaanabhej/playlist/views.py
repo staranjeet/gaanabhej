@@ -156,7 +156,7 @@ class SuggestionList(ListView):
 
 
 class MyPlayList(ListView):
-	template_name = 'myplaylist.html'
+	template_name = 'playlist.html'
 
 	def get(self,request,*args,**kwargs):
 		songs = None

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block container %}
+
+	<ul>
+		{% for eachSong in songs %}
+			<li>
+
+				<div class="row">
+					<div class="col-sm-4">
+						{{eachSong.song.name}}
+						<a href="{{eachSong.song.url}}" target="_blank">
+							<i class="glyphicon glyphicon-facetime-video"></i>
+						</a>
+					</div>
+					<div class="col-sm-4">
+
+						&lt;<span class="text-info" data-toggle="tooltip" title="Total Views" data-placement="left">
+							{{eachSong.song.views}},
+						</span>
+						<span class="text-success" data-toggle="tooltip" title="Likes" data-placement="top">
+							{{eachSong.song.likes}},
+						</span>
+						<span class="text-danger" data-toggle="tooltip" title="Dislikes" data-placement="right">
+							{{eachSong.song.dislikes}}
+						</span>&gt;
+
+					</div>
+				</div>
+			</li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}
+
+{% block custom_javascript %}
+
+	<script src="{% static "bower_components/bootstrap/js/tooltip.js" %}"></script>
+	<script type="text/javascript">
+
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+		});
+
+	</script>
+
+{% endblock %}
+
+
+
+	
+
+	

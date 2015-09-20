@@ -8,7 +8,11 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.base import  RedirectView
 from django.contrib.auth            import views as auth_views
 
-from playlist.views import SuggestASong,SuggestionList,MyPlayList
+from playlist.views import ( 
+                SuggestASong,SuggestionList,
+                MyPlayList,MyOwnSuggestion
+                )
+
 
 urlpatterns = [
     # Examples:
@@ -17,6 +21,7 @@ urlpatterns = [
     url(r'^suggest', SuggestASong.as_view(), name='suggest_song'),
     url(r'^$', RedirectView.as_view(url=reverse_lazy('suggest_song')), name='play-list'),
     url(r'^myplaylist$', MyPlayList.as_view(), name='my_play_list'),
+    url(r'^mysuggestions$', MyOwnSuggestion.as_view(), name='my_suggestions'),
     url(r'^songs', SuggestionList.as_view(), name='suggestion_list'),
     url(r'^songs/(?P<suggestionId>[0-9]+)/(?P<scoreString>[-\w]+)/', SuggestionList.as_view(), name='suggestion_list'),
 

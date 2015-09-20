@@ -3,17 +3,35 @@
 
 {% block container %}
 
+
+	{% if msg %}
+
+		<div class="row">
+
+			<div class="col-sm-8 col-sm-offset-2">
+					<div class="alert alert-dismissible alert-info" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<p>{{msg}}</p>
+				</div>
+			</div>
+
+		</div>
+
+	{% endif %}
+
 	<ul>
-		{% for eachSong in songs %}
+		{% for eachSong in ownSuggestions %}
 			
 
 				<div class="row">
 					<div class="col-sm-4">
 						<li>
-						{{eachSong.song.name}}
-						<a href="{{eachSong.song.url}}" target="_blank">
-							<i class="glyphicon glyphicon-facetime-video"></i>
-						</a>
+							{{eachSong.song.name}}
+							<a href="{{eachSong.song.url}}" target="_blank">
+								<i class="glyphicon glyphicon-facetime-video"></i>
+							</a>
 					</div>
 					<div class="col-sm-4">
 
@@ -27,8 +45,8 @@
 						data-placement="bottom">
 							{{eachSong.song.dislikes}},
 						</span>
-						<span class="text-success" data-toggle="tooltip" title="Suggested By" data-placement="right">
-							{{eachSong.suggestedBy.username}}
+						<span class="text-success" data-toggle="tooltip" title="Suggested To" data-placement="right">
+							{{eachSong.suggestedTo.username}}
 						</span>&gt;
 						</li>
 					</div>

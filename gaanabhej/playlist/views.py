@@ -168,3 +168,31 @@ class MyPlayList(ListView):
 		return render(request,self.template_name,{
 			'songs'		: songs
 			})
+
+class MyOwnSuggestion(ListView):
+	template_name = 'myOwnSuggestion.html'
+
+	def get(self,request,*args,**kwargs):
+
+		ownSuggestions = None
+
+		alrtBstrpCls = 'alert-info'
+		msg = None
+
+
+		if request.user.is_authenticated():
+
+			ownSuggestions = SuggestedSongs.objects.filter(suggestedBy=request.user.id)
+			if len(ownSuggestions) == 0:
+				msg = '''Oops! Looks like you not have not suggested any song. No issues.
+						Suggesting a song is very easy. Just paste in the youtube url and 
+						select the user and Voila. Your song is suggested to him
+				'''
+			else:
+				msg = ''' Uptill now you have suggested %s songs
+					   ''' % (len(ownSuggestions))
+
+		return render(request,self.template_name,{
+				'ownSuggestions'	: ownSuggestions,
+				'msg'				: msg
+			})

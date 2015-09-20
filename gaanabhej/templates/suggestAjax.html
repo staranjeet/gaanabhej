@@ -8,14 +8,9 @@
 			</a>
 		</div>
 		<div class="col-sm-3">
-			&lt;<span class="text-info" data-toggle="tooltip" title="Total Views" data-placement="left">
-			{{i.song.views}},
-			</span>
-			<span class="text-success" data-toggle="tooltip" title="Likes" data-placement="top">
-			{{i.song.likes}},
-			</span>
-			<span class="text-danger" data-toggle="tooltip" title="Dislikes" data-placement="right">{{i.song.dislikes}}
-			</span>&gt;
+			<span class="label label-info" data-toggle="tooltip" title="Total Views" data-placement="left">{{i.song.views}}</span>
+			<span class="label label-success" data-toggle="tooltip" title="Likes" data-placement="top">{{i.song.likes}}</span>
+			<span class="label label-danger" data-toggle="tooltip" title="Dislikes" data-placement="right">{{i.song.dislikes}}</span>
 		</div>
 		<div class="btn-group" role="group">
 			<button type="button" class="btn btn-success" helper_id={{i.id}} id="superawesome" data-toggle="tooltip" data-placement="left" title="SuperAwesome">50</button>

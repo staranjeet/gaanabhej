@@ -57,9 +57,7 @@ class SuggestASong(ListView):
 				if isSongPresent:
 					# means that the song is already suggested
 					alertMsg 	= '''Oops!! Looks like you have already suggested  
-									this song to %s''' % (
-									suggestedTo.username,
-									)
+									this song to {user}'''.format(user=suggestedTo.username)
 					alrtBstrpCls = 'alert-info'
 
 				else:

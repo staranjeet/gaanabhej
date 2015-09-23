@@ -44,3 +44,6 @@ class SuggestedSongs(models.Model):
 
 	def __unicode__(self):
 		return str(self.id)
+
+class ExtendedUser(models.Model):
+	pass

@@ -28,7 +28,7 @@ class SongDetails(models.Model):
 class SuggestedSongs(models.Model):
 
 	id 			= models.AutoField(primary_key=True)
-	suggestedTo	= models.ForeignKey(User,db_column='suggested_to',related_name='suggested_to_user')
+	suggestedTo	= models.ForeignKey(User,db_column='suggested_to',related_name='suggested_to_user',related_query_name='touser')
 	suggestedBy	= models.ForeignKey(User,db_column='suggested_by',related_name='suggested_by_user')
 	song 		= models.ForeignKey(SongDetails)
 	isSeen		= models.BooleanField(default=False,db_column='is_seen',verbose_name='Listened by user?')
@@ -45,5 +45,5 @@ class SuggestedSongs(models.Model):
 	def __unicode__(self):
 		return str(self.id)
 
-class ExtendedUser(models.Model):
-	pass
+# class ExtendedUser(models.Model):
+# 	pass

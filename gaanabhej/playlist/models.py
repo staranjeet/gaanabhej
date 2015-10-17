@@ -47,3 +47,17 @@ class SuggestedSongs(models.Model):
 
 # class ExtendedUser(models.Model):
 # 	pass
+
+class MySongModel(models.Model):
+
+	id = models.AutoField(primary_key=True)
+	song = models.ForeignKey(SongDetails, db_column='song_added', related_name='my_song')
+	owner = models.ForeignKey(User, db_column='listener', related_name='adding_user')
+
+	class Meta:
+		verbose_name = 'My Song'
+		verbose_name_plural = 'My Songs'
+		db_table = 'my_song'
+
+	def __unicode__(self):
+		return '{} : {}'.format(self.owner.username, self.song.name)

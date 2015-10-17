@@ -1,6 +1,9 @@
 from django		import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
+
+from playlist.models import SongDetails
+
 def getUser(userid):
 	userList = User.objects.filter(~Q(id=userid))
 	selectUserList = [(eachUser.id,eachUser.username) for eachUser in userList]
@@ -31,3 +34,19 @@ class PlayListForm(forms.Form):
 	# 	choices		= (),
 	# 	widget		= forms.Select(attrs={'class':'form-control','placeholder':'I would like to suggest to','style':'width:100%;'})
 	# 	)
+
+class AddSongToPlayListForm(forms.ModelForm):
+
+	class Meta:
+		model = SongDetails
+		fields = ('url', )
+
+	def __init__(self, *args, **kwargs):
+		super(AddSongToPlayListForm, self).__init__(*args, **kwargs)
+		self.fields['url'].widget.attrs.update({
+			'class' : 'form-control',
+			'placeholder' : 'Paste the Youtube url here'
+			})
+		# exclude = ('name', 'artist', 'duration', 'likes', 'views', 'dislikes',)
+
+

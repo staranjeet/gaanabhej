@@ -10,7 +10,8 @@ from django.contrib.auth            import views as auth_views
 
 from playlist.views import ( 
                 SuggestASong,SuggestionList,
-                MyPlayList,MyOwnSuggestion
+                MyPlayList,MyOwnSuggestion,
+                AddSongToPlayList
                 )
 
 
@@ -26,6 +27,7 @@ urlpatterns = [
     url(r'^myplaylist$', MyPlayList.as_view(), name='my_play_list'),
     url(r'^mysuggestions$', MyOwnSuggestion.as_view(), name='my_suggestions'),
     url(r'^songs', SuggestionList.as_view(), name='suggestion_list'),
+    url(r'^addsong', AddSongToPlayList.as_view(), name='add-to-playlist'),
     url(r'^songs/(?P<suggestionId>[0-9]+)/(?P<scoreString>[-\w]+)/', SuggestionList.as_view(), name='suggestion_list'),
 
     # url(r'^ajax/score/(?P<suggestionId>[0-9]+)/(?P<scoreString>[-\w]+)/$',UpdateSongScoreAjax.as_view(),name="update-score-ajax-view"),

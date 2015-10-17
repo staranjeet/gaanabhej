@@ -13,9 +13,11 @@ from django.template 					import RequestContext
 from django.views.generic.detail 		import SingleObjectMixin
 from django.utils.decorators            import method_decorator
 from django.contrib.auth.decorators     import login_required
+from django.views import generic
 
 from .forms import PlayListForm
 from playlist.models import SongDetails,SuggestedSongs
+from playlist.forms import AddSongToPlayListForm
 
 
 def convertToInt(no):
@@ -24,6 +26,21 @@ def convertToInt(no):
 	'''
 	no = no.replace(',','')
 	return int(no)
+
+def return_song_details(url):
+
+	try:
+		page			= requests.get(url).text
+		x	 			= etree.HTML(page)
+		title			= x.xpath('//title/text()')[0]
+		views			= convertToInt(x.xpath('//div[@class="watch-view-count"]/text()')[0])
+		likes			= convertToInt(x.xpath('//button[@title="Unlike"]/span[@class="yt-uix-button-content"]/text()')[0])
+		dislikes		= convertToInt(x.xpath('//button[@title="I dislike this"]/span[@class="yt-uix-button-content"]/text()')[0])
+	except Exception as e:
+		print 'Error : Parsing song info ',e
+		title,views,likes,dislikes = [None]*4
+	
+	return (title, views, likes, dislikes)
 
 class SuggestASong(ListView):
 
@@ -65,20 +82,22 @@ class SuggestASong(ListView):
 
 				else:
 
-					try:
-						page			= requests.get(songURL).text
-						x	 			= etree.HTML(page)
-						title			= x.xpath('//title/text()')[0]
-						views			= convertToInt(x.xpath('//div[@class="watch-view-count"]/text()')[0])
-						likes			= convertToInt(x.xpath('//button[@title="Unlike"]/span[@class="yt-uix-button-content"]/text()')[0])
-						dislikes		= convertToInt(x.xpath('//button[@title="I dislike this"]/span[@class="yt-uix-button-content"]/text()')[0])
+					title, views, likes, dislikes = return_song_details(songURL)
+
+					# try:
+					# 	page			= requests.get(songURL).text
+					# 	x	 			= etree.HTML(page)
+					# 	title			= x.xpath('//title/text()')[0]
+					# 	views			= convertToInt(x.xpath('//div[@class="watch-view-count"]/text()')[0])
+					# 	likes			= convertToInt(x.xpath('//button[@title="Unlike"]/span[@class="yt-uix-button-content"]/text()')[0])
+					# 	dislikes		= convertToInt(x.xpath('//button[@title="I dislike this"]/span[@class="yt-uix-button-content"]/text()')[0])
 					
-					except Exception,e:
-						print 'Error : Parsing song info ',e
-						title,views,likes,dislikes = [None]*4
-						parseError = True
+					# except Exception,e:
+					# 	print 'Error : Parsing song info ',e
+					# 	title,views,likes,dislikes = [None]*4
+					# 	parseError = True
 					
-					if not parseError:
+					if title is not None:
 						newsong = SongDetails(
 							url=songURL,name=title,views=views,
 							dislikes=dislikes,likes=likes
@@ -196,3 +215,30 @@ class MyOwnSuggestion(ListView):
 			   ''' % (ownSuggestions)
 		context['msg'] = msg
 		return context
+
+class AddSongToPlayList(generic.CreateView):
+
+	template_name = 'addSongToPlaylist.html'
+	form_class = AddSongToPlayListForm
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(AddSongToPlayList,self).dispatch(*args, **kwargs)
+
+	def post(self, request, *args, **kwargs):
+
+		d = {}
+		if request.user.is_authenticated():
+			songURL = request.POST.get('url', None)
+			if songURL:
+				title, views, likes, dislikes = return_song_details(songURL)
+				if title:
+					newsong = SongDetails(
+						url=songURL, name=title, views=views,
+						dislikes=dislikes, likes=likes)
+					newsong.save()
+					d['alertMsg'] = mark_safe('''%s is now added in your playlist.''' % (
+									title))
+					d['alrtBstrpCls'] = 'alert-info'
+		return HttpResponse(json.dumps(d))
+

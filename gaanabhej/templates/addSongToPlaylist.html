@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block container %}
+	
+<div class="row" id="progressBarDiv" style="display:none;">
+			<div class="col-sm-8 col-sm-offset-2">
+				<div class="progress">
+					<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						<span class="sr-only"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" id="alertMsgDiv" style="display:none;">
+			<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+				<div class="alert alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="alertMsgBtn">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<p id ="alertMsgTxt"></p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+
+			<form class="form-horizontal" id="addSongForm">
+
+				<div class="form-group">
+					<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+						 {{form.url}}
+					</div>
+				</div>
+
+				{% csrf_token %}
+
+				<div class="form-group">
+					<div class="col-xs-6 col-sm-4 col-sm-offset-2">
+						<button type="button" class="btn btn-primary btn-block" id="addSongBtn">
+							Add Song
+						</button>	
+					</div>
+					<div class="col-xs-6 col-sm-4">
+						<a type="submit"  id="reset" href="/addsong" class="btn btn-warning btn-block">
+							Changed my Mind
+						</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+
+{% endblock %}
+
+{% block custom_javascript %}
+
+		<script type="text/javascript">
+
+		{% include "ajaxPost.html" %}
+
+		$('#addSongBtn').unbind('click').click(function(e){
+
+			$("#progressBarDiv").show();
+
+			$.post('/addsong',$('#addSongForm').serialize(),function(data){
+						data = JSON.parse(data);
+
+						//hide the progress bar
+						$("#progressBarDiv").hide();
+
+						//customize the alert
+						$("#alertMsgDiv").show();
+						$("#alertMsgTxt").html();
+						$("#alertMsgTxt").html(data.alertMsg);
+
+						$(".alert").addClass(data.alrtBstrpCls);
+
+			});
+
+		});//button click ends here
+
+		</script>
+
+	{% endblock %}

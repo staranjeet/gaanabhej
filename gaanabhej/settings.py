@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'gaanabhej.wsgi.application'
 #     }
 # }
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/suggest'
 
 
 DATABASES = {

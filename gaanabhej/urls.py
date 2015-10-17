@@ -18,8 +18,11 @@ urlpatterns = [
     # Examples:
     # url(r'^$', 'gaanabhej.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
+    # url(r'^accounts/login/$',auth_views.login,{'template_name' : 'django-auth/login.html'}),
+    url('^logout/$', auth_views.logout, {'template_name' : 'registration/logged_out.html'}),
+    url('^', include('django.contrib.auth.urls')),
     url(r'^suggest', SuggestASong.as_view(), name='suggest_song'),
-    url(r'^$', RedirectView.as_view(url=reverse_lazy('suggest_song')), name='play-list'),
+    # url(r'^$', RedirectView.as_view(url=reverse_lazy('suggest_song')), name='play-list'),
     url(r'^myplaylist$', MyPlayList.as_view(), name='my_play_list'),
     url(r'^mysuggestions$', MyOwnSuggestion.as_view(), name='my_suggestions'),
     url(r'^songs', SuggestionList.as_view(), name='suggestion_list'),
@@ -27,8 +30,7 @@ urlpatterns = [
 
     # url(r'^ajax/score/(?P<suggestionId>[0-9]+)/(?P<scoreString>[-\w]+)/$',UpdateSongScoreAjax.as_view(),name="update-score-ajax-view"),
 
-    url(r'^accounts/login/$',auth_views.login),
-    url(r'^accounts/logout/$',auth_views.logout),
+    # url(r'^accounts/logout/$',auth_views.logout),
 
 
 

@@ -10,6 +10,9 @@ from django.template.context_processors import csrf
 from django.utils.safestring 			import mark_safe
 from django.core.context_processors 	import csrf
 from django.template 					import RequestContext
+from django.views.generic.detail 		import SingleObjectMixin
+from django.utils.decorators            import method_decorator
+from django.contrib.auth.decorators     import login_required
 
 from .forms import PlayListForm
 from playlist.models import SongDetails,SuggestedSongs
@@ -153,44 +156,43 @@ class SuggestionList(ListView):
 			})
 
 
-class MyPlayList(ListView):
+class MyPlayList(SingleObjectMixin, ListView):
+	context_object_name = 'songs'
 	template_name = 'playlist.html'
 
-	def get(self,request,*args,**kwargs):
-		songs = None
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		return super(MyPlayList,self).dispatch(*args, **kwargs)
+	def get_queryset(self):
+		return SuggestedSongs.objects.filter(suggestedTo=self.request.user).order_by('-score')
 
-		if request.user.is_authenticated():
+	# def get(self,request,*args,**kwargs):
+	# 	songs = None
 
-			songs = SuggestedSongs.objects.filter(suggestedTo=request.user).order_by('-score')
+	# 	if request.user.is_authenticated():
 
-		return render(request,self.template_name,{
-			'songs'		: songs
-			})
+	# 		songs = SuggestedSongs.objects.filter(suggestedTo=request.user).order_by('-score')
+
+	# 	return render(request,self.template_name,{
+	# 		'songs'		: songs
+	# 		})
 
 class MyOwnSuggestion(ListView):
 	template_name = 'myOwnSuggestion.html'
+	context_object_name = 'ownSuggestions'
 
-	def get(self,request,*args,**kwargs):
+	def get_queryset(self):
+		return SuggestedSongs.objects.filter(suggestedBy=self.request.user.id)
 
-		ownSuggestions = None
-
-		alrtBstrpCls = 'alert-info'
-		msg = None
-
-
-		if request.user.is_authenticated():
-
-			ownSuggestions = SuggestedSongs.objects.filter(suggestedBy=request.user.id)
-			if len(ownSuggestions) == 0:
-				msg = '''Oops! Looks like you not have not suggested any song. No issues.
-						Suggesting a song is very easy. Just paste in the youtube url and 
-						select the user and Voila. Your song is suggested to him
+	def get_context_data(self,**kwargs):
+		context = super(MyOwnSuggestion, self).get_context_data(**kwargs)
+		msg = '''Oops! Looks like you not have not suggested any song. No issues.
+					Suggesting a song is very easy. Just paste in the youtube url and 
+					select the user and Voila. Your song is suggested to him
 				'''
-			else:
-				msg = ''' Uptill now you have suggested %s songs
-					   ''' % (len(ownSuggestions))
-
-		return render(request,self.template_name,{
-				'ownSuggestions'	: ownSuggestions,
-				'msg'				: msg
-			})
+		ownSuggestions = len(self.get_queryset())
+		if ownSuggestions > 0:
+			msg = ''' Uptill now you have suggested %s songs
+			   ''' % (ownSuggestions)
+		context['msg'] = msg
+		return context

@@ -44,11 +44,11 @@
         <li><a href="/myplaylist">My Playlist</a></li>
         <li><a href="/mysuggestions">My Suggestions</a></li>
             <li>
-              <a href="{% url 'django.contrib.auth.views.logout' %}?next=/suggest">Logout</a>
+              <a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a>
             </li>
         {% else %}
 
-          <form id="searchForm" class="navbar-form navbar-right" role="form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+          <!-- <form id="searchForm" class="navbar-form navbar-right" role="form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
               {% csrf_token %}
               <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -61,7 +61,7 @@
               <input type="submit" class="btn btn-primary" value="Log In">
               <input type="hidden" name="next" value="{{ next }}" />
 
-            </form>
+            </form> -->
 
         {% endif %}
 

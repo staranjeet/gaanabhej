@@ -14,6 +14,7 @@ from django.views.generic.detail 		import SingleObjectMixin
 from django.utils.decorators            import method_decorator
 from django.contrib.auth.decorators     import login_required
 from django.views import generic
+from django.core.mail import send_mail
 
 from playlist.models import (
 							SongDetails,
@@ -45,6 +46,10 @@ def return_song_details(url):
 		title,views,likes,dislikes = [None]*4
 	
 	return (title, views, likes, dislikes)
+
+def custom_send_mail(recipient, sender, subject, message):
+
+	send_mail(subject, message, sender, recipient, fail_silently=True)
 
 class SuggestASong(ListView):
 
@@ -88,19 +93,6 @@ class SuggestASong(ListView):
 
 					title, views, likes, dislikes = return_song_details(songURL)
 
-					# try:
-					# 	page			= requests.get(songURL).text
-					# 	x	 			= etree.HTML(page)
-					# 	title			= x.xpath('//title/text()')[0]
-					# 	views			= convertToInt(x.xpath('//div[@class="watch-view-count"]/text()')[0])
-					# 	likes			= convertToInt(x.xpath('//button[@title="Unlike"]/span[@class="yt-uix-button-content"]/text()')[0])
-					# 	dislikes		= convertToInt(x.xpath('//button[@title="I dislike this"]/span[@class="yt-uix-button-content"]/text()')[0])
-					
-					# except Exception,e:
-					# 	print 'Error : Parsing song info ',e
-					# 	title,views,likes,dislikes = [None]*4
-					# 	parseError = True
-					
 					if title is not None:
 						newsong = SongDetails(
 							url=songURL,name=title,views=views,
@@ -110,7 +102,14 @@ class SuggestASong(ListView):
 						suggestion = SuggestedSongs(suggestedTo=suggestedTo,
 							suggestedBy=suggestedBy,song=newsong,isSeen=False)
 						suggestion.save()
-
+						# notify 
+						senderEmail = suggestedBy.email
+						senderName = suggestedBy.username
+						recipientEmail = [suggestedTo.email]
+						subject = '{0} has suggested you a song'.format(senderName)
+						message = '{0} has suggested you {1}'.format(senderName, title)
+						# custom_send_mail(recipientEmail, senderEmail, subject, message)
+						
 						alertMsg 	= mark_safe('''Your song is successfully suggested to %s. 
 									What a %s suggestion''' % (
 										suggestedTo.username,
@@ -233,7 +232,7 @@ class AddSongToPlayList(generic.CreateView):
 
 		d = {}
 		alertMsg = '''We are facing some error in retriving  
-										media info. Can you please try again later'''
+					media info. Can you please try again later'''
 		bstrpCls = 'alert-danger'
 		if request.user.is_authenticated():
 			songURL = request.POST.get('url', None)

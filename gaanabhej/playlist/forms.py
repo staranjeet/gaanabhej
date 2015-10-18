@@ -9,29 +9,40 @@ from playlist.models import (
 def getUser(userid):
 	userList = User.objects.filter(~Q(id=userid))
 	selectUserList = [(eachUser.id,eachUser.username) for eachUser in userList]
-	selectUserList.insert(0,("",""))
+	selectUserList.insert(0,("","Select User"))
 	return selectUserList
 
 def getSongs(userid):
-	songs = MySongModel.objects.filter(owner=userid).select_related('song')
+	songsList = MySongModel.objects.filter(owner=userid)
+	songs =[(eachSong.song.url, eachSong.song.name) for eachSong in songsList]
+	songs.insert(0, ("","Select Song"))
+	return songs
 
 
 class SuggestSongForm(forms.Form):
 
 	def __init__(self,*args,**kwargs):
 		self.user = kwargs.pop('user',None)
-		super(PlayListForm,self).__init__(*args,**kwargs)
+		super(SuggestSongForm,self).__init__(*args,**kwargs)
 		self.fields['suggestedTo'] = forms.ChoiceField(choices=getUser(self.user.id),
 			required=True,
 			label		= 'Suggested To User',
 			help_text 	= 'Suggested to',
-			widget	= forms.Select(attrs={'class':'form-control','placeholder':'I would like to suggest to','style':'width:100%;'}))
+			widget	= forms.Select(attrs={'class' : 'form-control', 
+							'placeholder' : 'I would like to suggest to','style':'width:100%;'}
+			))
+		self.fields['songName'] = forms.ChoiceField(choices=getSongs(self.user.id),
+			help_text='Name of the song to be suggested',
+			required=True,
+			widget=forms.Select(attrs={'class' : 'form-control',
+				'placeholder' : 'Your suggestion here'}
+			))
 
-	songName	= forms.CharField(
-					help_text='Name of the song to be suggested',
-					required=True,
-					widget=forms.URLInput(attrs={'class':'form-control','placeholder':'Your suggestion here'})
-					)
+	# songName	= forms.CharField(
+	# 				help_text='Name of the song to be suggested',
+	# 				required=True,
+	# 				widget=forms.URLInput(attrs={'class':'form-control','placeholder':'Your suggestion here'})
+	# 				)
 
 	# suggestedTo = forms.ChoiceField(
 	# 	label		= 'Suggested To User',

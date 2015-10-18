@@ -2,7 +2,6 @@ import requests,json
 from lxml import etree
 
 from django.shortcuts 					import render
-from django.views.generic 				import ListView
 from django.contrib.auth.models 		import User
 from django.db.models 					import Q
 from django.http 						import HttpResponse,HttpResponseRedirect
@@ -51,9 +50,18 @@ def custom_send_mail(recipient, sender, subject, message):
 
 	send_mail(subject, message, sender, recipient, fail_silently=True)
 
-class SuggestASong(ListView):
+class SuggestASong(generic.CreateView):
 
-	template_name		= 'newSuggestion.html'
+	template_name = 'newSuggestion.html'
+	# form_class = SuggestSongForm
+
+	# def get_form_kwargs(self, **kwargs):
+	# 	form_kwargs = super(SuggestASong, self).get_form_kwargs(**kwargs)
+	# 	form_kwargs['user'] = self.request.user
+	# 	return form_kwargs
+
+	# def get_queryset(self):
+	# 	return Suggest
 
 	def get(self,request,*args,**kwargs):
 
@@ -76,13 +84,11 @@ class SuggestASong(ListView):
 			# print suggestedBy.id ,'suggesting to ', suggestedToId
 
 			if songURL is not None:
-				# print songURL
 
 				# before parinsg info for song, check if this song is already
 				# suggested or not
 				isSongPresent 		= SuggestedSongs.objects.filter(suggestedTo=suggestedToId,
 										suggestedBy=suggestedBy.id,song__url=songURL)
-				# print isSongPresent
 				if isSongPresent:
 					# means that the song is already suggested
 					alertMsg 	= '''Oops!! Looks like you have already suggested  
@@ -108,8 +114,9 @@ class SuggestASong(ListView):
 						recipientEmail = [suggestedTo.email]
 						subject = '{0} has suggested you a song'.format(senderName)
 						message = '{0} has suggested you {1}'.format(senderName, title)
+						# dont delete this comment
 						# custom_send_mail(recipientEmail, senderEmail, subject, message)
-						
+
 						alertMsg 	= mark_safe('''Your song is successfully suggested to %s. 
 									What a %s suggestion''' % (
 										suggestedTo.username,
@@ -129,7 +136,7 @@ class SuggestASong(ListView):
 		return HttpResponse(json.dumps(d))
 
 
-class SuggestionList(ListView):
+class SuggestionList(generic.ListView):
 
 	template_name = 'suggestionList.html'
 
@@ -178,7 +185,7 @@ class SuggestionList(ListView):
 			})
 
 
-class MyPlayList(SingleObjectMixin, ListView):
+class MyPlayList(SingleObjectMixin, generic.ListView):
 	context_object_name = 'songs'
 	template_name = 'playlist.html'
 
@@ -199,7 +206,7 @@ class MyPlayList(SingleObjectMixin, ListView):
 	# 		'songs'		: songs
 	# 		})
 
-class MyOwnSuggestion(ListView):
+class MyOwnSuggestion(generic.ListView):
 	template_name = 'myOwnSuggestion.html'
 	context_object_name = 'ownSuggestions'
 

@@ -45,12 +45,17 @@
 			var id = this.id;
 			var suggestionId = $(this).attr('helper_id');
 
-			$.post('songs',{'suggestionId':suggestionId,'scoreString':id},
-			function(data){
+			$.ajax({
+				type: "POST",
+				url : "songs",
+				data: {'suggestionId':suggestionId,'scoreString':id},
+			}).done(function(data){
 				// console.log(data);
 				$('#suggestions').empty();
 				$('#suggestions').html(data);
+				//$('#unseenCount').text("");
 			});
+
 		});
 
 	</script>

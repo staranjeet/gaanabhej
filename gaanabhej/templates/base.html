@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <html>
 
 	<head>
@@ -41,7 +42,7 @@
         {% if user.is_authenticated  %}
           <li><a href="/suggest">Suggest</a></li>
           <li><a href="/addsong">Add Song</a></li>
-        <li><a href="/songs">Suggestions</a></li>
+        <li><a href="/songs">Suggestions&nbsp;<span class="badge" id="unseenCount">{{unseen}}</span></a></li>
         <li><a href="/myplaylist">My Playlist</a></li>
         <li><a href="/mysuggestions">My Suggestions</a></li>
             <li>

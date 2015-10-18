@@ -1,4 +1,4 @@
-from django		import forms
+from django	import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
 
@@ -17,7 +17,6 @@ def getSongs(userid):
 	songs =[(eachSong.song.url, eachSong.song.name) for eachSong in songsList]
 	songs.insert(0, ("","Select Song"))
 	return songs
-
 
 class SuggestSongForm(forms.Form):
 
@@ -38,20 +37,7 @@ class SuggestSongForm(forms.Form):
 				'placeholder' : 'Your suggestion here'}
 			))
 
-	# songName	= forms.CharField(
-	# 				help_text='Name of the song to be suggested',
-	# 				required=True,
-	# 				widget=forms.URLInput(attrs={'class':'form-control','placeholder':'Your suggestion here'})
-	# 				)
-
-	# suggestedTo = forms.ChoiceField(
-	# 	label		= 'Suggested To User',
-	# 	required 	= True,
-	# 	help_text 	= 'Suggested to',
-	# 	choices		= (),
-	# 	widget		= forms.Select(attrs={'class':'form-control','placeholder':'I would like to suggest to','style':'width:100%;'})
-	# 	)
-
+	
 class AddSongToPlayListForm(forms.ModelForm):
 
 	class Meta:
@@ -64,6 +50,5 @@ class AddSongToPlayListForm(forms.ModelForm):
 			'class' : 'form-control',
 			'placeholder' : 'Paste the Youtube url here'
 			})
-		# exclude = ('name', 'artist', 'duration', 'likes', 'views', 'dislikes',)
 
 

@@ -15,17 +15,13 @@ from django.utils.decorators            import method_decorator
 from django.contrib.auth.decorators     import login_required
 from django.views import generic
 
-<<<<<<< HEAD
-from .forms import SuggestSongForm
 from playlist.models import (
 							SongDetails,
 							SuggestedSongs,
 							MySongModel)
-=======
-from .forms import PlayListForm
-from playlist.models import SongDetails,SuggestedSongs
->>>>>>> 82d3b8a1d6a1852c40d159f5bd6a6de404e3dfdb
-from playlist.forms import AddSongToPlayListForm
+from playlist.forms import (
+						AddSongToPlayListForm,
+						SuggestSongForm)
 
 
 def convertToInt(no):

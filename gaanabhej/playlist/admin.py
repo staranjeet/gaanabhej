@@ -1,6 +1,12 @@
 from django.contrib import admin
-from .models import SongDetails,SuggestedSongs
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+from .models import (
+					SongDetails,
+					SuggestedSongs,
+					UserProfile)
 
+@admin.register(SongDetails)
 class SongDetailsAdmin(admin.ModelAdmin):
 
 	list_per_page 				= 100
@@ -9,6 +15,7 @@ class SongDetailsAdmin(admin.ModelAdmin):
 	search_fields 				= ['name',]
 
 
+@admin.register(SuggestedSongs)
 class SuggestedSongsAdmin(admin.ModelAdmin):
 
 	list_per_page 				= 100
@@ -18,5 +25,26 @@ class SuggestedSongsAdmin(admin.ModelAdmin):
 	list_filter 				= ['song','suggestedBy','suggestedTo','isSeen']
 
 	
-admin.site.register(SongDetails,SongDetailsAdmin)
-admin.site.register(SuggestedSongs,SuggestedSongsAdmin)
+class UserProfileInline(admin.StackedInline):
+	model = UserProfile
+	can_delete = False
+	verbose_name_plural = 'User'
+
+
+class UserAdmin(UserAdmin):
+	inlines = (UserProfileInline, )
+	list_display = ('username', 'email', 'first_name', 'display_score')
+
+	def display_score(self, request):
+		if UserProfile.objects.filter(user__id=request.id):
+			return UserProfile.objects.get(user__id=request.id).score
+		else:
+			return None
+		display_name.short_description = 'Score'
+
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
+
+# admin.site.register(SongDetails,SongDetailsAdmin)
+# admin.site.register(SuggestedSongs,SuggestedSongsAdmin)

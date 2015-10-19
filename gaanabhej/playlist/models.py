@@ -61,3 +61,13 @@ class MySongModel(models.Model):
 
 	def __unicode__(self):
 		return '{} : {}'.format(self.owner.username, self.song.name)
+
+class UserProfile(models.Model):
+	user = models.OneToOneField(User)
+	score = models.IntegerField(default=0, db_column='score')
+
+	class Meta:
+		db_table = 'user_profile'
+		verbose_name = 'User Profile'
+		verbose_name_plural = 'Users Profile'
+

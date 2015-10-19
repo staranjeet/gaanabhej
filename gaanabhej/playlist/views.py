@@ -18,7 +18,8 @@ from django.core.mail import send_mail
 from playlist.models import (
 							SongDetails,
 							SuggestedSongs,
-							MySongModel)
+							MySongModel,
+							UserProfile)
 from playlist.forms import (
 						AddSongToPlayListForm,
 						SuggestSongForm)
@@ -159,9 +160,9 @@ class SuggestionList(generic.ListView):
 			"cantsay"		: 5,
 			"abitlike"		: 25,
 			"superawesome"	: 50,
-			"ok"			:	15,
-			"bad"			:	-10,
-			"what"			:	-50,
+			"ok"			: 15,
+			"bad"			: -10,
+			"what"			: -50,
 		}
 
 		if request.user.is_authenticated():
@@ -176,6 +177,11 @@ class SuggestionList(generic.ListView):
 			suggestedSong = SuggestedSongs.objects.filter(id=suggestionId)[0]
 			SuggestedSongs.objects.filter(id=suggestionId).update(isSeen=True,score=points)
 			suggestedBy = suggestedSong.suggestedBy
+			existingProfile = UserProfile.objects.get(user__id=suggestedBy.id)
+			existingProfile.score += points
+			# print 'updated points', existingProfile.score 
+			existingProfile.save()
+			# UserProfile.objects.get(user__id=suggestedBy.id).update(updatedPoints)
 			msg = 'You have given %s points to %s' % (points,suggestedBy.username)
 			# print msg,suggestedTo.id
 			suggestionList = SuggestedSongs.objects.filter(suggestedTo=suggestedTo.id,isSeen=False)

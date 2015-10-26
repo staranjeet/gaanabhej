@@ -191,9 +191,10 @@ class SuggestionList(generic.ListView):
 			})
 
 
-class MyPlayList(SingleObjectMixin, generic.ListView):
+class MyPlayList( generic.ListView):
 	context_object_name = 'songs'
 	template_name = 'playlist.html'
+
 
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
@@ -272,3 +273,16 @@ class AddSongToPlayList(generic.CreateView):
 		d['alrtBstrpCls'] = bstrpCls
 		return HttpResponse(json.dumps(d))
 
+
+
+class UserSongProfile(generic.DetailView):
+
+	template_name = 'userSongProfile.html'
+	# model = UserProfile
+	context_object_name = 'userProfile'
+
+	def get_queryset(self):
+		u = User.objects.get(id=self.kwargs['pk'])
+		g = UserProfile.objects.filter(user=u)
+		print u,g
+		return g
